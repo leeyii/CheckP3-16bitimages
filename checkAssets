@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -e "$1" ]; then 
+	echo
+else
+	echo "请传入正确文件包路径"
+	exit 0
+fi
+
+unzip $1 -d ./  > /dev/null
+sudo -S xcrun --sdk iphoneos assetutil --info ./Payload/*/Assets.car > ./Assets.json
+echo '查找p3'
+grep -i "p3" ./Assets.json > /dev/null
+if [ $? -eq 0 ]
+then
+	echo -e "[\033[31merror\033[0m]找到p3图请注意"
+else
+	echo -e "[\033[32mok\033[0m]未找到p3图"
+fi
+
+echo '查找16位图'
+grep "\"BitsPerComponent\"\ :\ 16" ./Assets.json
+if [ $? -eq 0 ]
+then
+        echo -e "[\033[31merror\033[0m]找到16位图请注意!!!"  
+else  
+        echo -e "[\033[32mok\033[0m]未找到16位图"  
+fi  
+
